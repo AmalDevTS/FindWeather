@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <title>Weather</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Rubik', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            color: white;
+        }
+
+        h1,
+        h3 {
+            font-weight: 400;
+        }
+
+        .weather-app {
+            min-height: 100vh;
+            background-image: url(./karsten-wurth-0w-uTa0Xz7w-unsplash.jpg);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-direction: column;
+            padding: 2em 1em 4em 1em;
+        }
+
+
+        .container>div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+
+
+        .city-time h1 {
+            margin: 0;
+            margin-bottom: 0.2rem;
+            font-size: 2rem;
+        }
+
+        .temp {
+            font-size: 7em;
+            margin: 0;
+        }
+
+
+        .panel {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 2em;
+        }
+
+        .searchbtn {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        ::placeholder {
+            color: white !important;
+        }
+
+        .card {
+            width: 18rem;
+            margin-top: 40px;
+            align-self: flex-end;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="weather-app">
+        <div id="container">
+            <h3 class="brand"></h3>
+
+        </div>
+        <div class="panel">
+            <div class="searchbtn">
+                <input type="text" style="background: rgba(239, 241, 240, 0.192);color: white;"
+                    placeholder="Search place" class="form-control rounded-4" id="place" onclick="search()">
+                <button type="submit" class="btn  ms-3 rounded-4" style="background: #fa6d1b; color: white;"
+                    onclick="search()">
+                    <i class="fa fa-search" aria-hidden="true"></i></button>
+            </div>
+            <div id="result_container">
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        function ktoc(kelvin) {
+            return (kelvin - 273.15).toFixed(2);
+
+        }
+        const search = async () => {
+            if (place.value !== '') {
+                let cityName = place.value;
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=8e21e00b9bc53215038bd9c1741b2a65`);
+                console.log(response);
+                response.json().then((data) => {
+
+                    container.innerHTML = `<div>
+                <h1 class="temp">${ktoc(data.main.temp)}&#176;C</h1>
+                <div class="city-time">
+                    <h1 class="name">${data.name}</h1>
+                </div>
+                <div class="weather">
+                    <span class="condition">${data.weather[0].main}</span>
+                    <img src="./1.png" alt="" class="icon" width="50" height="50">
+                    
+                </div>
+            </div>`
+
+
+                    result_container.innerHTML = `<div class="card rounded-5" style="background: rgba(239, 241, 240, 0.192); color:white;"width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Weather Details</h5>
+                    <img src="./cloud.png" width="70" height= "50">
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" style="background: rgba(239, 241, 240, 0.057); color:white;">Min Temperature: ${ktoc(data.main.temp_min)}&#176;C</li>
+                    <li class="list-group-item" style="background: rgba(239, 241, 240, 0.057); color:white;">Max Temperature: ${ktoc(data.main.temp_max)}&#176;C</li>
+                    <li class="list-group-item" style="background: rgba(239, 241, 240, 0.057); color:white;">Humidity: ${data.main.humidity}%</li>
+                    <li class="list-group-item" style="background: rgba(239, 241, 240, 0.057); color:white">Pressure: ${data.main.pressure}hPa</li>
+                    <li class="list-group-item" style="background: rgba(239, 241, 240, 0.057); color:white">Wind Speed: ${data.wind.speed}m/s</li>
+
+
+                    
+                </ul>
+               
+            </div>`
+                })
+            }
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>
